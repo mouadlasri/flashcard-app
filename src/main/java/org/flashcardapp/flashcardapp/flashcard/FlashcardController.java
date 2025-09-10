@@ -32,8 +32,8 @@ public class FlashcardController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FlashcardResponse> getFlashcard(@PathVariable Long id) {
-        Flashcard flashcard = flashcardService.getFlashcard(id);
+    public ResponseEntity<FlashcardResponse> getFlashcard(@PathVariable Long deckId, @PathVariable Long id) {
+        Flashcard flashcard = flashcardService.getFlashcardById(deckId, id);
 
         FlashcardResponse response = new FlashcardResponse(
                 flashcard.getId(),
@@ -58,8 +58,8 @@ public class FlashcardController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<FlashcardResponse> updateFlashcard(@PathVariable Long id, @RequestBody CreateFlashcardRequest request) {
-        Flashcard updatedFlashcard = flashcardService.updateFlashcard(id, request);
+    public ResponseEntity<FlashcardResponse> updateFlashcard(@PathVariable Long deckId, @PathVariable Long id, @RequestBody CreateFlashcardRequest request) {
+        Flashcard updatedFlashcard = flashcardService.updateFlashcard(deckId, id, request);
 
         FlashcardResponse response = new FlashcardResponse(
                 updatedFlashcard.getId(),
@@ -71,8 +71,8 @@ public class FlashcardController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteFlashcard(@PathVariable Long id) {
-        flashcardService.deleteFlashcard(id);
+    public ResponseEntity<Void> deleteFlashcard(@PathVariable Long deckId, @PathVariable Long id) {
+        flashcardService.deleteFlashcard(deckId, id);
         return ResponseEntity.noContent().build();
     }
 

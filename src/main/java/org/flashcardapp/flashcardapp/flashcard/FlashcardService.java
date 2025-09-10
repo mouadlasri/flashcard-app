@@ -31,18 +31,20 @@ public class FlashcardService {
         return flashcards;
     }
 
-    public Flashcard getFlashcard(Long id) {
-        Optional<Flashcard> flashcard = flashcardRepository.findById(id);
+    public Flashcard getFlashcardById(Long deckId, Long id) {
+        Flashcard flashcard = flashcardRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Flashcard not found with ID: " + id));
 
-        if (!flashcard.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Flashcard not found with ID: " + id);
+        if (!flashcard.getDeck().getId().equals(deckId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Flashcard does not belong to this deck");
         }
-        return flashcard.get();
+        return flashcard;
     }
 
     @Transactional
     public Flashcard createFlashcard(Long deckId, CreateFlashcardRequest request) {
         Deck deck = deckRepository.findById(deckId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Deck not found with ID: " + deckId));
+
         Flashcard flashcard = new Flashcard();
         flashcard.setQuestion(request.getQuestion());
         flashcard.setAnswer(request.getAnswer());
@@ -52,18 +54,29 @@ public class FlashcardService {
     }
 
     @Transactional
-    public Flashcard updateFlashcard(Long id, CreateFlashcardRequest request) {
+    public Flashcard updateFlashcard(Long deckId, Long id, CreateFlashcardRequest request) {
         Flashcard flashcard = flashcardRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Flashcard not found with ID: " + id));
+
+        // validate that the flashcard belongs to the correct deck
+        if (!flashcard.getDeck().getId().equals(deckId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Flashcard does not belong to this deck");
+        }
+
         flashcard.setQuestion(request.getQuestion());
         flashcard.setAnswer(request.getAnswer());
 
         return flashcardRepository.save(flashcard);
     }
 
-    public void deleteFlashcard(Long id) {
-        if (!flashcardRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Flashcard not found with ID: " + id);
+    public void deleteFlashcard(Long deckId, Long id) {
+        Flashcard existingFlashcard = flashcardRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Flashcard not found with ID: " + id));
+
+        // validate that flashcard belongs to the correct deck
+        if (!existingFlashcard.getDeck().getId().equals(deckId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Flashcard deos not belond to this deck");
         }
+
         flashcardRepository.deleteById(id);
     }
 }
