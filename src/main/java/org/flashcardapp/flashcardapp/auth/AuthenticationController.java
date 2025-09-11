@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthenticationController {
@@ -46,6 +49,9 @@ public class AuthenticationController {
             // get user details
             User user = userRepository.findByUsername(request.getUsername())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found."));
+
+            user.setLastLogin(LocalDateTime.now());
+            userRepository.save(user);
 
             AuthenticationResponse response = new AuthenticationResponse(
                     jwtToken,
