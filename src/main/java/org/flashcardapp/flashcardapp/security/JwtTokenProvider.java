@@ -1,6 +1,5 @@
 package org.flashcardapp.flashcardapp.security;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -43,7 +42,7 @@ public class JwtTokenProvider {
                 .getSubject();
     }
 
-    public boolean validatetoken(String token) {
+    public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(getSigningKey())

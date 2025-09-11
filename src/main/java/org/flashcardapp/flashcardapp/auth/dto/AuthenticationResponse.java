@@ -7,10 +7,9 @@ public class AuthenticationResponse {
 
     public AuthenticationResponse() {}
 
-    public AuthenticationResponse(String token, String username, String password) {
+    public AuthenticationResponse(String token, String username) {
         this.token = token;
         this.username = username;
-        this.password = password;
     }
 
     public String getToken() {
@@ -27,13 +26,5 @@ public class AuthenticationResponse {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 }
