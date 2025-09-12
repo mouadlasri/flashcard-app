@@ -2,6 +2,10 @@ package org.flashcardapp.flashcardapp.flashcard;
 
 import jakarta.persistence.*;
 import org.flashcardapp.flashcardapp.deck.Deck;
+import org.flashcardapp.flashcardapp.userprogress.UserProgress;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "flashcard")
@@ -19,6 +23,9 @@ public class Flashcard {
     @ManyToOne
     @JoinColumn(name = "deck_id", nullable = false)
     private Deck deck;
+
+    @OneToMany(mappedBy = "flashcard", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UserProgress> userProgress = new HashSet<>();
 
     public Flashcard() {}
 
@@ -58,5 +65,13 @@ public class Flashcard {
 
     public void setDeck(Deck deck) {
         this.deck = deck;
+    }
+
+    public Set<UserProgress> getUserProgress() {
+        return userProgress;
+    }
+
+    public void setUserProgress(Set<UserProgress> userProgress) {
+        this.userProgress = userProgress;
     }
 }

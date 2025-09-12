@@ -1,8 +1,11 @@
 package org.flashcardapp.flashcardapp.user;
 
 import jakarta.persistence.*;
+import org.flashcardapp.flashcardapp.userprogress.UserProgress;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -22,6 +25,9 @@ public class User {
 
     @Column(name = "last_login")
     private LocalDateTime lastLogin;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UserProgress> userProgress = new HashSet<>();
 
     public User() {}
 
@@ -70,5 +76,13 @@ public class User {
 
     public void setLastLogin(LocalDateTime lastLogin) {
         this.lastLogin = lastLogin;
+    }
+
+    public Set<UserProgress> getUserProgress() {
+        return userProgress;
+    }
+
+    public void setUserProgress(Set<UserProgress> userProgress) {
+        this.userProgress = userProgress;
     }
 }
