@@ -40,10 +40,10 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(); // performs username/password validation
+    public AuthenticationProvider authenticationProvider(CustomUserDetailsService userDetailsService) {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService); // performs username/password validation
         // tell is where to find user details (through CustomerUserDetailsService)
-        authProvider.setUserDetailsService(userDetailsService);
+//        authProvider.setUserDetailsService(userDetailsService);
         // tell it how to check passwords (using BCrypt hashing)
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
